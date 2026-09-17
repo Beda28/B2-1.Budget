@@ -38,4 +38,12 @@ def create_parser() -> argparse.ArgumentParser:
     summary.add_argument("--month", required=True)
     summary.add_argument("--top", type=int, default=3)
 
+    search = subparse.add_parser("search")
+    search.add_argument("--from", dest="date_from")
+    search.add_argument("--to"  , dest="date_to")
+    search.add_argument("--category")
+    search.add_argument("--type")
+    search.add_argument("--q")
+    search.add_argument("--tag")
+    
     return parser

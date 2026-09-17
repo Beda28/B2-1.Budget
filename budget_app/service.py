@@ -100,3 +100,22 @@ class TransactionService:
             "budget"         : budget_amount,
             "top_categories" : top_categories
         }
+
+    def search(self, date_from: str | None = None, date_to: str | None = None,
+                     category : str | None = None, type   : str | None = None, 
+                     q        : str | None = None, tag    : str | None = None
+            ) -> list[dict]:
+        data_list = []
+
+        for data in self.transaction.stream():
+            if date_from is not None and data["date"]      < date_from: continue
+            if date_to   is not None and data["date"]      > date_to  : continue
+            if category  is not None and data["category"] != category : continue
+            if type      is not None and data["type"]     != type     : continue
+            if q         is not None and data["q"]        != q        : continue
+            if tag       is not None and data["tag"]      != tag      : continue
+
+            data_list.append(data)
+        data_list.sort(key=lambda item: item["date"], reverse=True)
+
+        return data_list

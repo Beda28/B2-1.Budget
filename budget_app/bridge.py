@@ -116,7 +116,29 @@ def bridge(args) -> None:
 
         for category, amount in data["top_categories"]:
             print(f"{category}: {amount}원")
-            
+
+    elif args.command == 'search':
+        datas = service.search(
+            date_from = args.date_from,
+            date_to   = args.date_to,
+            category  = args.category,
+            type      = args.type,
+            q         = args.q,
+            tag       = args.tag
+        )
+
+        if not datas: return print("검색 결과가 없습니다.")
+        print("ID  날짜       타입          금액    카테고리")
+
+        for data in datas:
+            print(
+                f"{data['id']:<3} "
+                f"{data['date']} "
+                f"{data['type']:<10} "
+                f"{data['amount']:>8}원 "
+                f"{data['category']}"
+            )
+
 def split_tag() -> list[str]:
     tag = input("태그: ")
     tag = tag.strip()
