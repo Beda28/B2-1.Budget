@@ -12,8 +12,10 @@ class TransactionService:
     def add(self, transaction: Transaction) -> None:
         self.repository.save(transaction)
 
-    def list(self) -> list[dict]:
-        return list(self.repository.stream())
+    def list(self, limit: int | None = None) -> list[dict]:
+        data = list(self.repository.stream())
+        if limit is not None: data = data[-limit:]
+        return data
 
     def detail(self, id: int) -> dict | None:
         data_list = self.repository.stream()

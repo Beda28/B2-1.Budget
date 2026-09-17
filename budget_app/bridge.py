@@ -20,7 +20,7 @@ def bridge(args) -> None:
         print("거래가 추가되었습니다.")
 
     if args.command == "list":
-        transaction = service.list()
+        transaction = service.list(args.limit)
 
         if not transaction: return print("거래 내역이 없습니다.")
         print("ID  날짜       타입          금액    카테고리")
