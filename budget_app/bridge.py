@@ -12,13 +12,13 @@ def bridge(args) -> None:
             amount   = int(input("거래 금액: ")),
             category = input("카테고리: "),
             memo     = input("메모: "),
-            tags     = input("태그: ").split(",")
+            tags     = split_tag()
         )
 
         service.add(data)
         print("거래가 추가되었습니다.")
 
-    if args.command == "list":
+    elif args.command == "list":
         datas = service.list(args.limit)
 
         if not datas: return print("거래 내역이 없습니다.")
@@ -33,7 +33,7 @@ def bridge(args) -> None:
                 f"{data['category']}"
             )
 
-    if args.command == 'detail':
+    elif args.command == 'detail':
         data = service.detail(args.id)
 
         if data is None: return print("해당 거래를 찾을 수 없습니다.")
@@ -46,7 +46,7 @@ def bridge(args) -> None:
         print(f"메모: {data['memo']}")
         print(f"태그: {', '.join(data['tags'])}")
 
-    if args.command == 'update':
+    elif args.command == 'update':
         data = service.detail(args.id)
 
         if data is None: return print("해당 거래를 찾을 수 없습니다.")
@@ -59,11 +59,13 @@ def bridge(args) -> None:
             amount   = int(input("거래 금액: ")             or data["amount"]),
             category = input("카테고리: ")                  or data["category"],
             memo     = input("메모: ")                      or data["memo"],
-            tags     = data["tags"]
+            tags     = split_tag()
         )
-
-        tags = input("태그: ")
-        if tags: update_data.tags = tags.split(",")
 
         service.update(args.id, update_data)
         print("거래가 수정되었습니다.")
+
+def split_tag() -> list[str]:
+    tag = input("태그: ")
+    tag.strip()
+    return tag.split(",")

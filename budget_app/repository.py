@@ -3,7 +3,6 @@ import json
 from dataclasses import asdict
 from pathlib     import Path
 
-
 class JsonlRepository:
     def __init__(self, file_path:str | Path):
         self.file_path = Path(file_path)
@@ -36,6 +35,8 @@ class JsonlRepository:
         with self.file_path.open("w", encoding='utf-8') as file:
             for data in data_list:
                 file.write(json.dumps(data, ensure_ascii=False) + "\n")
+
+        return True
 
     def next_id(self):
         transaction = list(self.stream())
