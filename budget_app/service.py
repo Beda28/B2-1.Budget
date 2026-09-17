@@ -6,7 +6,7 @@ from .repository  import JsonlRepository
 class TransactionService:
     def __init__(self, data_dir: str = "./data"):
         self.transaction = JsonlRepository(Path(data_dir)/"transactions.jsonl")
-        self.category    = JsonlRepository(Path(data_dir)/"categorys.jsonl")
+        self.category    = JsonlRepository(Path(data_dir)/"categories.jsonl")
         self.budget      = JsonlRepository(Path(data_dir)/"budgets.jsonl")
 
     def next_id(self) -> int:
