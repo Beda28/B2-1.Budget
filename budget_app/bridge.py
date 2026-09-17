@@ -71,5 +71,5 @@ def bridge(args) -> None:
 
 def split_tag() -> list[str]:
     tag = input("태그: ")
-    tag.strip()
+    tag = tag.strip()
     return tag.split(",")

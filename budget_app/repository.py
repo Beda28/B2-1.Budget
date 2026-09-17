@@ -9,8 +9,9 @@ class JsonlRepository:
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
 
     def save(self, data) -> None:
+        data = asdict(data) if hasattr(data, "__dataclass_fields__") else data
         with self.file_path.open("a", encoding='utf-8') as file:
-            file.write(json.dumps(asdict(data), ensure_ascii=False) + '\n')
+            file.write(json.dumps(data, ensure_ascii=False) + '\n')
 
     def stream(self):
         if not self.file_path.exists(): return
