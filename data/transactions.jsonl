@@ -1,2 +1,2 @@
-{"id": 1, "type": "income", "date": "2026-09-17", "amount": 10000, "category": "test", "memo": "hahah", "tags": ["18"]}
-{"id": 2, "type": "expense", "date": "2026-09-17", "amount": 10000, "category": "hometax", "memo": "sibal", "tags": ["18"]}
+{"id": 1, "type": "income", "date": "2026-09-17", "amount": 5000, "category": "test", "memo": "hahah", "tags": [""]}
+{"id": 2, "type": "expense", "date": "2026-09-17", "amount": 10000, "category": "hometax", "memo": "sibal", "tags": ["하하", " 하하하하"]}

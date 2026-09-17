@@ -1,6 +1,7 @@
-from pathlib    import Path
-from model      import Transaction
-from repository import JsonlRepository
+from pathlib      import Path
+from dataclasses  import asdict
+from .model       import Transaction
+from .repository  import JsonlRepository
 
 class TransactionService:
     def __init__(self, data_dir: str = "./data"):
@@ -25,3 +26,6 @@ class TransactionService:
                 return data
 
         return None
+
+    def update(self, id: int, data: Transaction) -> bool:
+        return self.repository.update(id, asdict(data))

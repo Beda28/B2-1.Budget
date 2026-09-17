@@ -21,6 +21,22 @@ class JsonlRepository:
                 if line.strip():
                     yield json.loads(line)
 
+    def update(self, id: int, changed_data: dict) -> bool:
+        data_list = list(self.stream())
+        updated   = False
+
+        for data in data_list:
+            if data['id'] == id:
+                data.update(changed_data)
+                updated = True
+                break
+
+        if not updated: return False
+
+        with self.file_path.open("w", encoding='utf-8') as file:
+            for data in data_list:
+                file.write(json.dumps(data, ensure_ascii=False) + "\n")
+
     def next_id(self):
         transaction = list(self.stream())
 
