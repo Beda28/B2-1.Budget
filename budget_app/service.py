@@ -112,8 +112,8 @@ class TransactionService:
             if date_to   is not None and data["date"]      > date_to  : continue
             if category  is not None and data["category"] != category : continue
             if type      is not None and data["type"]     != type     : continue
-            if q         is not None and data["q"]        != q        : continue
-            if tag       is not None and data["tag"]      != tag      : continue
+            if q         is not None and data["memo"]     != q        : continue
+            if tag       is not None and data["tags"]     != tag      : continue
 
             data_list.append(data)
         data_list.sort(key=lambda item: item["date"], reverse=True)
