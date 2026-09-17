@@ -14,3 +14,12 @@ class TransactionService:
 
     def list(self) -> list[dict]:
         return list(self.repository.stream())
+
+    def detail(self, id: int) -> dict | None:
+        data_list = self.repository.stream()
+
+        for data in data_list:
+            if data["id"] == id:
+                return data
+
+        return None

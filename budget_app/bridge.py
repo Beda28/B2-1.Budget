@@ -23,8 +23,8 @@ def bridge(args) -> None:
         transaction = service.list()
 
         if not transaction: return print("거래 내역이 없습니다.")
-
         print("ID  날짜       타입          금액    카테고리")
+
         for transactions in transaction:
             print(
                 f"{transactions['id']:<3} "
@@ -33,3 +33,16 @@ def bridge(args) -> None:
                 f"{transactions['amount']:>8}원 "
                 f"{transactions['category']}"
             )
+
+    if args.command == 'detail':
+        transaction = service.detail(args.id)
+
+        if transaction is None: return print("해당 거래를 찾을 수 없습니다.")
+
+        print(f"거래 ID  : {transaction['id']}")
+        print(f"거래 타입: {transaction['type']}")
+        print(f"거래 날짜: {transaction['date']}")
+        print(f"거래 금액: {transaction['amount']}원")
+        print(f"카테고리 : {transaction['category']}")
+        print(f"메모: {transaction['memo']}")
+        print(f"태그: {', '.join(transaction['tags'])}")

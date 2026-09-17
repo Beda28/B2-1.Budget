@@ -7,4 +7,7 @@ def create_parser() -> argparse.ArgumentParser:
     subparse.add_parser("add")
     subparse.add_parser("list")
 
+    detail = subparse.add_parser("detail")
+    detail.add_argument("id", type=int)
+
     return parser
