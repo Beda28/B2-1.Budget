@@ -28,3 +28,6 @@ class TransactionService:
 
     def update(self, id: int, data: Transaction) -> bool:
         return self.repository.update(id, asdict(data))
+    
+    def delete(self, id: int) -> bool:
+        return self.repository.delete(id)

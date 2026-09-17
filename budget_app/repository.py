@@ -35,7 +35,17 @@ class JsonlRepository:
         with self.file_path.open("w", encoding='utf-8') as file:
             for data in data_list:
                 file.write(json.dumps(data, ensure_ascii=False) + "\n")
+        return True
 
+    def delete(self, id: int) -> bool:
+        data_list = list(self.stream())
+        new_list  = [data for data in data_list if data["id"] != id]
+
+        if len(data_list) == len(new_list): return False
+
+        with self.file_path.open("w", encoding='utf-8') as file:
+            for data in new_list:
+                file.write(json.dumps(data, ensure_ascii=False) + "\n")
         return True
 
     def next_id(self):

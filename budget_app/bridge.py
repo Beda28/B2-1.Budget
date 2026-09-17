@@ -65,6 +65,10 @@ def bridge(args) -> None:
         service.update(args.id, update_data)
         print("거래가 수정되었습니다.")
 
+    elif args.command == 'delete':
+        if service.delete(args.id) : print("거래가 삭제되었습니다.")
+        else                       : print("거래를 찾을 수 없습니다.")
+
 def split_tag() -> list[str]:
     tag = input("태그: ")
     tag.strip()
