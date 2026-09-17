@@ -18,4 +18,14 @@ def create_parser() -> argparse.ArgumentParser:
     delete = subparse.add_parser("delete")
     delete.add_argument("id", type=int)
 
+    category     = subparse.add_parser("category")
+    category_sub = category.add_subparsers(dest="cate", required=True)
+    category_sub.add_parser("list")
+
+    category_add = category_sub.add_parser("add")
+    category_add.add_argument("name")
+
+    category_rmv = category_sub.add_parser("remove")
+    category_rmv.add_argument("name")
+
     return parser

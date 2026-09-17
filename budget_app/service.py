@@ -33,3 +33,19 @@ class TransactionService:
     
     def delete(self, id: int) -> bool:
         return self.transaction.delete(id)
+
+    def category_add(self, name: str) -> None:
+        self.category.save({"name": name})
+        
+    def category_list(self) -> list[dict]:
+        return list(self.category.stream())
+
+    def category_remove(self, name: str) -> bool:
+        category = self.category_list()
+
+        for cate in category:
+            if cate["name"] == name:
+                category.remove(cate)
+                self.category.rewrite(category)
+                return True
+        return False

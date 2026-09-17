@@ -69,6 +69,20 @@ def bridge(args) -> None:
         if service.delete(args.id) : print("거래가 삭제되었습니다.")
         else                       : print("거래를 찾을 수 없습니다.")
 
+    elif args.command == 'category':
+        if args.cate == "add":
+            service.category_add(args.name)
+            print("카테고리가 추가되었습니다.")
+        elif args.cate == "list":
+            category = service.category_list()
+
+            if not category: return print("카테고리가 없습니다.")
+            for cate in category:   print(cate["name"])
+
+        elif args.cate == "remove":
+            if service.category_remove(args.name): print("카테고리가 삭제되었습니다.")
+            else                                 : print("카테고리를 찾을 수 없습니다.")
+
 def split_tag() -> list[str]:
     tag = input("태그: ")
     tag = tag.strip()

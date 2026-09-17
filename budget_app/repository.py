@@ -23,20 +23,13 @@ class JsonlRepository:
 
     def update(self, id: int, changed_data: dict) -> bool:
         data_list = list(self.stream())
-        updated   = False
 
         for data in data_list:
             if data['id'] == id:
                 data.update(changed_data)
-                updated = True
-                break
-
-        if not updated: return False
-
-        with self.file_path.open("w", encoding='utf-8') as file:
-            for data in data_list:
-                file.write(json.dumps(data, ensure_ascii=False) + "\n")
-        return True
+                self.rewrite(data_list)
+                return True
+        return False
 
     def delete(self, id: int) -> bool:
         data_list = list(self.stream())
@@ -48,6 +41,11 @@ class JsonlRepository:
             for data in new_list:
                 file.write(json.dumps(data, ensure_ascii=False) + "\n")
         return True
+
+    def rewrite(self, data_list: list[dict]) -> None:
+        with self.file_path.open("w", encoding="utf-8") as file:
+            for data in data_list:
+                file.write(json.dumps(data, ensure_ascii=False) + "\n")
 
     def next_id(self):
         transaction = list(self.stream())
