@@ -83,6 +83,40 @@ def bridge(args) -> None:
             if service.category_remove(args.name): print("카테고리가 삭제되었습니다.")
             else                                 : print("카테고리를 찾을 수 없습니다.")
 
+    elif args.command == 'budget':
+        if args.budget == 'set':
+            service.budget_set(args.month, args.amount)
+            print("예산이 설정되었습니다.")
+
+    elif args.command == 'summary':
+        data = service.summary(args.month, args.top)
+
+        print(f"{data['month']} 요약")
+        print()
+        print(f"총수입: {data['total_income']}원")
+        print(f"총지출: {data['total_expense']}원")
+        print(f"잔액: {data['balance']}원")
+
+        if data["budget"] > 0:
+            usage = data["total_expense"] / data["budget"] * 100
+
+            print()
+            print(f"예산: {data['budget']}원")
+            print(f"예산 사용액: {data['total_expense']}원")
+            print(f"예산 사용률: {usage:.1f}%")
+
+            if data["total_expense"] > data["budget"]:
+                print(f"예산 초과: {data['total_expense'] - data['budget']}원")
+
+        print()
+        print(f"지출 TOP {args.top}")
+
+        if not data["top_categories"]:
+            print("지출 내역이 없습니다.")
+
+        for category, amount in data["top_categories"]:
+            print(f"{category}: {amount}원")
+            
 def split_tag() -> list[str]:
     tag = input("태그: ")
     tag = tag.strip()

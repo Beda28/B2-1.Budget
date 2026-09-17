@@ -28,4 +28,14 @@ def create_parser() -> argparse.ArgumentParser:
     category_rmv = category_sub.add_parser("remove")
     category_rmv.add_argument("name")
 
+    budget     = subparse.add_parser("budget")
+    budget_add = budget.add_subparsers(dest="budget", required=True)
+    budget_set = budget_add.add_parser("set")
+    budget_set.add_argument("--month",  required=True)
+    budget_set.add_argument("--amount", required=True, type=int)
+
+    summary = subparse.add_parser("summary")
+    summary.add_argument("--month", required=True)
+    summary.add_argument("--top", type=int, default=3)
+
     return parser

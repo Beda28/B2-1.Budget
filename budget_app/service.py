@@ -1,5 +1,6 @@
 from pathlib      import Path
 from dataclasses  import asdict
+from collections  import defaultdict
 from .model       import Transaction
 from .repository  import JsonlRepository
 
@@ -49,3 +50,53 @@ class TransactionService:
                 self.category.rewrite(category)
                 return True
         return False
+
+    def budget_set(self, month: str, amount: int) -> None:
+        data = list(self.budget.stream())
+
+        for item in data:
+            if item["month"] == month:
+                item["amount"] = amount
+                self.budget.rewrite(data)
+                return
+
+        data.append({
+            "month": month,
+            "amount": amount
+        })
+
+        self.budget.rewrite(data)
+
+    def summary(self, month: str, top: int = 3) -> dict:
+        total_income   = 0
+        total_expense  = 0
+        category_total = defaultdict(int)
+
+        for data in self.transaction.stream():
+            if   not data["date"].startswith(month): continue
+            if   data["type"] == "income": total_income += data["amount"]
+            elif data["type"] == "expense": 
+                total_expense += data["amount"]
+                category_total[data["category"]] += data["amount"]
+
+        budget_amount = 0
+
+        for data in self.budget.stream():
+            if data["month"] == month:
+                budget_amount = data["amount"]
+                break
+
+        top_categories = sorted(
+            category_total.items(),
+            key=lambda item: item[1],
+            reverse=True
+        )[:top]
+
+        return {
+            "month"          : month,
+            "total_income"   : total_income,
+            "total_expense"  : total_expense,
+            "balance"        : total_income - total_expense,
+            "budget"         : budget_amount,
+            "top_categories" : top_categories
+        }
