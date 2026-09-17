@@ -6,5 +6,8 @@ class TransactionService:
     def __init__(self, data_dir: str = "./data"):
         self.repository = JsonlRepository(Path(data_dir)/"transactions.jsonl")
 
+    def next_id(self) -> int:
+        return self.repository.next_id()
+
     def add(self, transaction: Transaction) -> None:
         self.repository.save(transaction)

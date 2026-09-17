@@ -3,7 +3,7 @@ from typing      import Literal
 
 @dataclass
 class Transaction:
-    id: str
+    id: int
     type: Literal["income", "expense"]
     date: str
     amount: int

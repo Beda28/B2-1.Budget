@@ -20,3 +20,9 @@ class JsonlRepository:
             for line in file:
                 if line.strip():
                     yield json.loads(line)
+
+    def next_id(self):
+        transaction = list(self.stream())
+
+        if not transaction: return 1
+        return max(transactions["id"] for transactions in transaction) + 1

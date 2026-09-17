@@ -1,6 +1,8 @@
-from model   import Transaction
-from service import TransactionService
+from cli     import create_parser
+from bridge  import bridge
 
-transaction = Transaction(id=1, type='expense', date='2026-09-17', amount=5000, category='식비', memo='점심')
-service = TransactionService()
-service.add(transaction)
+if __name__ == "__main__":
+    parser = create_parser()
+    args   = parser.parse_args()
+
+    bridge(args=args)
