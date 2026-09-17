@@ -11,3 +11,6 @@ class TransactionService:
 
     def add(self, transaction: Transaction) -> None:
         self.repository.save(transaction)
+
+    def list(self) -> list[dict]:
+        return list(self.repository.stream())
