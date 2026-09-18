@@ -29,6 +29,16 @@ class TransactionService:
     def next_id(self) -> int:
         return self.transaction.next_id()
 
+    def category_exists(self, name: str) -> bool:
+        return any(
+            data["name"] == name
+            for data in self.category.stream()
+        )
+
+    def validate_transaction_category(self, category: str) -> None:
+        if not self.category_exists(category):
+            raise ValueError(f"등록되지 않은 카테고리입니다: {category}\n먼저 category add로 등록해주세요.")
+
     def add(self, transaction: Transaction) -> None:
         validate_date(transaction.date)
         validate_amount(transaction.amount)
@@ -36,6 +46,7 @@ class TransactionService:
         validate_category_name(transaction.category)
         validate_memo(transaction.memo)
         validate_tags(transaction.tags)
+        self.validate_transaction_category(transaction.category)
         
         self.transaction.save(transaction)
 
@@ -63,6 +74,7 @@ class TransactionService:
         validate_category_name(data.category)
         validate_memo(data.memo)
         validate_tags(data.tags)
+        self.validate_transaction_category(data.category)
 
         return self.transaction.update(id, asdict(data))
     
@@ -71,24 +83,31 @@ class TransactionService:
         return self.transaction.delete(id)
 
     def category_add(self, name: str) -> None:
-        validate_category_name(name)
+        name = validate_category_name(name)
 
+        if self.category_exists(name): raise ValueError(f"이미 등록된 카테고리입니다: {name}")
         self.category.save({"name": name})
         
     def category_list(self) -> list[dict]:
         return list(self.category.stream())
 
     def category_remove(self, name: str) -> bool:
-        validate_category_name(name)
+        name = validate_category_name(name)
 
-        category = self.category_list()
+        if not self.category_exists(name): return False
 
-        for cate in category:
-            if cate["name"] == name:
-                category.remove(cate)
-                self.category.rewrite(category)
-                return True
-        return False
+        for data in self.transaction.stream():
+            if data["name"] == name:
+                raise ValueError(f"사용중인 카테고리는 삭제할 수 없습니다: {name}")
+
+        category = [
+            data
+            for data in self.category.stream()
+            if  data["name"] != name
+        ]
+
+        self.category.rewrite(category)
+        return True
 
     def budget_set(self, month: str, amount: int) -> None:
         validate_month(month)
@@ -119,7 +138,7 @@ class TransactionService:
 
         for data in self.transaction.stream():
             if   not data["date"].startswith(month): continue
-            if   data["type"] == "income": total_income += data["amount"]
+            if   data["type"] == "income"          : total_income += data["amount"]
             elif data["type"] == "expense": 
                 total_expense += data["amount"]
                 category_total[data["category"]] += data["amount"]
@@ -137,13 +156,18 @@ class TransactionService:
             reverse=True
         )[:top]
 
+        budget_usage = 0
+        if budget_amount > 0: budget_usage = round(total_expense / budget_amount * 100, 2)
+
         return {
             "month"          : month,
             "total_income"   : total_income,
             "total_expense"  : total_expense,
             "balance"        : total_income - total_expense,
             "budget"         : budget_amount,
-            "top_categories" : top_categories
+            "top_categories" : top_categories,
+            "budget_usage"   : budget_usage,
+            "budget_exceeded": (budget_amount > 0 and total_expense > budget_amount)
         }
 
     def search(self, date_from: str | None = None, date_to: str | None = None,
@@ -174,8 +198,17 @@ class TransactionService:
         data_list = self.transaction.import_csv(file_path)
 
         for data in data_list:
+            validate_date(data["date"])
+            validate_amount(data["amount"])
+            validate_type(data["type"])
+            validate_category_name(data["category"])
+            validate_memo(data["memo"])
+            validate_tags(data["tags"])
+            self.validate_transaction_category(data["category"])
+
+        for data in data_list:
             data["id"] = self.next_id()
-            self.add(data)
+            self.add(Transaction(**data))
 
         return len(data_list)
 

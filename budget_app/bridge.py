@@ -98,14 +98,12 @@ def bridge(args) -> None:
         print(f"잔액: {data['balance']}원")
 
         if data["budget"] > 0:
-            usage = data["total_expense"] / data["budget"] * 100
-
             print()
             print(f"예산: {data['budget']}원")
             print(f"예산 사용액: {data['total_expense']}원")
-            print(f"예산 사용률: {usage:.1f}%")
+            print(f"예산 사용률: {data['budget_usage']:.1f}%")
 
-            if data["total_expense"] > data["budget"]:
+            if data['budget_exceeded']:
                 print(f"예산 초과: {data['total_expense'] - data['budget']}원")
 
         print()
