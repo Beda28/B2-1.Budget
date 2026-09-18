@@ -1,8 +1,8 @@
 from .cli       import create_parser
 from .bridge    import bridge
-from .decorator import handel_error
+from .decorator import handle_error
 
-@handel_error
+@handle_error
 def main():
     parser = create_parser()
     args   = parser.parse_args()

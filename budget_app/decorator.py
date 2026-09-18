@@ -3,10 +3,16 @@ import functools
 import json
 import sys
 
-def handel_error(function):
+def handle_error(function):
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
         try: return function(*args, **kwargs)
+        
+        except SystemExit as error:
+            if error.code != 0:
+                print("명령어 사용법이 올바르지 않습니다.")
+                print("python -m budget_app --help 로 사용법을 확인해주세요.")
+            sys.exit(error.code)
 
         except ValueError as error:
             print(f"입력값 오류: {error}")
