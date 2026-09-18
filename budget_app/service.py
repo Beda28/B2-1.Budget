@@ -97,7 +97,7 @@ class TransactionService:
         if not self.category_exists(name): return False
 
         for data in self.transaction.stream():
-            if data["name"] == name:
+            if data["category"] == name:
                 raise ValueError(f"사용중인 카테고리는 삭제할 수 없습니다: {name}")
 
         category = [

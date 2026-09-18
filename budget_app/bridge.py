@@ -58,9 +58,11 @@ def bridge(args) -> None:
             date     = input("거래 날짜(YYYY-MM-DD): ")     or data["date"],
             amount   = int(input("거래 금액: ")             or data["amount"]),
             category = input("카테고리: ")                  or data["category"],
-            memo     = input("메모: ")                      or data["memo"],
-            tags     = split_tag()
+            memo     = input("메모: ")                      or data["memo"]
         )
+
+        tags     = split_tag()
+        if tags != []: update_data.tags = tags
 
         service.update(args.id, update_data)
         print("거래가 수정되었습니다.")
@@ -70,7 +72,7 @@ def bridge(args) -> None:
         else                       : print("거래를 찾을 수 없습니다.")
 
     elif args.command == 'category':
-        if args.cate == "add":
+        if args.cate  == "add":
             service.category_add(args.name)
             print("카테고리가 추가되었습니다.")
         elif args.cate == "list":
@@ -155,6 +157,6 @@ def bridge(args) -> None:
         print(f"{count}개의 거래를 내보냈습니다.")
 
 def split_tag() -> list[str]:
-    tag = input("태그: ")
-    tag = tag.strip()
+    tag = input("태그: ").strip()
+    if not tag: return []
     return tag.split(",")
