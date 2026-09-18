@@ -3,6 +3,22 @@ from dataclasses  import asdict
 from collections  import defaultdict
 from .model       import Transaction
 from .repository  import JsonlRepository
+from .validate    import (
+    validate_date,
+    validate_month,
+    validate_amount,
+    validate_type,
+    validate_category_name,
+    validate_memo,
+    validate_tags,
+    validate_limit,
+    validate_top,
+    validate_id,
+    validate_date_range,
+    validate_csv_file,
+    validate_export_condition
+)
+
 
 class TransactionService:
     def __init__(self, data_dir: str = "./data"):
@@ -14,14 +30,24 @@ class TransactionService:
         return self.transaction.next_id()
 
     def add(self, transaction: Transaction) -> None:
+        validate_date(transaction.date)
+        validate_amount(transaction.amount)
+        validate_type(transaction.type)
+        validate_category_name(transaction.category)
+        validate_memo(transaction.memo)
+        validate_tags(transaction.tags)
+        
         self.transaction.save(transaction)
 
     def list(self, limit: int | None = None) -> list[dict]:
+        validate_limit(limit)
+
         data = list(self.transaction.stream())
         if limit is not None and limit > 0: data = data[-limit:]
         return data
 
     def detail(self, id: int) -> dict | None:
+        validate_id(id)
         data_list = self.transaction.stream()
 
         for data in data_list:
@@ -30,18 +56,31 @@ class TransactionService:
         return None
 
     def update(self, id: int, data: Transaction) -> bool:
+        validate_id(id)
+        validate_date(data.date)
+        validate_amount(data.amount)
+        validate_type(data.type)
+        validate_category_name(data.category)
+        validate_memo(data.memo)
+        validate_tags(data.tags)
+
         return self.transaction.update(id, asdict(data))
     
     def delete(self, id: int) -> bool:
+        validate_id(id)
         return self.transaction.delete(id)
 
     def category_add(self, name: str) -> None:
+        validate_category_name(name)
+
         self.category.save({"name": name})
         
     def category_list(self) -> list[dict]:
         return list(self.category.stream())
 
     def category_remove(self, name: str) -> bool:
+        validate_category_name(name)
+
         category = self.category_list()
 
         for cate in category:
@@ -52,22 +91,28 @@ class TransactionService:
         return False
 
     def budget_set(self, month: str, amount: int) -> None:
+        validate_month(month)
+        validate_amount(amount)
+
         data = list(self.budget.stream())
 
         for item in data:
-            if item["month"] == month:
+            if  item["month"] == month:
                 item["amount"] = amount
                 self.budget.rewrite(data)
                 return
 
         data.append({
-            "month": month,
+            "month" : month,
             "amount": amount
         })
 
         self.budget.rewrite(data)
 
     def summary(self, month: str, top: int = 3) -> dict:
+        validate_month(month)
+        validate_top(top)
+
         total_income   = 0
         total_expense  = 0
         category_total = defaultdict(int)
@@ -105,6 +150,10 @@ class TransactionService:
                      category : str | None = None, type   : str | None = None, 
                      q        : str | None = None, tag    : str | None = None
             ) -> list[dict]:
+        validate_date_range(date_from, date_to)
+        if category is not None: validate_category_name(category)
+        if type     is not None: validate_type(type)
+
         data_list = []
 
         for data in self.transaction.stream():
@@ -121,6 +170,7 @@ class TransactionService:
         return data_list
 
     def import_csv(self, file_path: str) -> int:
+        validate_csv_file(file_path)
         data_list = self.transaction.import_csv(file_path)
 
         for data in data_list:
@@ -132,6 +182,9 @@ class TransactionService:
     def export_csv(self, file_path: str,         month  : str | None = None,
                    date_from: str | None = None, date_to: str | None = None
         ) -> int:
+        validate_csv_file(file_path)
+        validate_export_condition(month, date_from, date_to)
+        
         data_list = []
 
         for data in self.transaction.stream():

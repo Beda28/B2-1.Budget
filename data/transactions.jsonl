@@ -2,3 +2,4 @@
 {"date": "2026-09-17", "type": "expense", "category": "test", "amount": 5000, "memo": "hahah", "tags": [], "id": 2}
 {"date": "2026-09-17", "type": "expense", "category": "test", "amount": 5000, "memo": "hahah", "tags": [], "id": 3}
 {"date": "2026-09-17", "type": "expense", "category": "test", "amount": 5000, "memo": "hahah", "tags": [], "id": 4}
+{"id": 5, "type": "income", "date": "2026-09-18", "amount": 10000, "category": "food", "memo": "삼각김밥", "tags": ["morning", " 룰루랄라"]}
