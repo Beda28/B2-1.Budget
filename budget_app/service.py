@@ -43,7 +43,7 @@ class TransactionService:
         validate_limit(limit)
 
         data = list(self.transaction.stream())
-        if limit is not None and limit > 0: data = data[-limit:]
+        if limit is not None: data = data[-limit:]
         return data
 
     def detail(self, id: int) -> dict | None:
@@ -161,8 +161,8 @@ class TransactionService:
             if date_to   is not None and data["date"]      > date_to  : continue
             if category  is not None and data["category"] != category : continue
             if type      is not None and data["type"]     != type     : continue
-            if q         is not None and data["memo"]     != q        : continue
-            if tag       is not None and data["tags"]     != tag      : continue
+            if q         is not None and q   not in data["memo"]      : continue
+            if tag       is not None and tag not in data["tags"]      : continue
 
             data_list.append(data)
         data_list.sort(key=lambda item: item["date"], reverse=True)
@@ -184,7 +184,7 @@ class TransactionService:
         ) -> int:
         validate_csv_file(file_path)
         validate_export_condition(month, date_from, date_to)
-        
+
         data_list = []
 
         for data in self.transaction.stream():
