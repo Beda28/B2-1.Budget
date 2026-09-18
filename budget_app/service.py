@@ -55,6 +55,8 @@ class TransactionService:
 
         data = list(self.transaction.stream())
         if limit is not None: data = data[-limit:]
+
+        data.sort(key=lambda item: (item["date"], item["id"]), reverse=True)
         return data
 
     def detail(self, id: int) -> dict | None:

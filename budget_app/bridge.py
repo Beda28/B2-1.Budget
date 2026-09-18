@@ -93,6 +93,9 @@ def bridge(args) -> None:
     elif args.command == 'summary':
         data = service.summary(args.month, args.top)
 
+        if data["total_income"] == 0 and data['total_expense'] == 0:
+            return print("해당 월의 거래 내역이 없습니다.")
+        
         print(f"{data['month']} 요약")
         print()
         print(f"총수입: {data['total_income']}원")
