@@ -139,6 +139,23 @@ def bridge(args) -> None:
                 f"{data['category']}"
             )
 
+    elif args.command == 'import':
+        count = service.import_csv(args.file)
+        print(f"{count}개의 거래를 가져왔습니다.")
+
+    elif args.command == 'export':
+        if not args.month and not args.date_from and not args.date_to:
+            return print("month 또는 from/to 조건이 필요합니다.")
+
+        count = service.export_csv(
+            file_path = args.out,
+            month     = args.month,
+            date_from = args.date_from,
+            date_to   = args.date_to
+        )
+
+        print(f"{count}개의 거래를 내보냈습니다.")
+
 def split_tag() -> list[str]:
     tag = input("태그: ")
     tag = tag.strip()

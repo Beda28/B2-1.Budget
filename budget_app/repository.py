@@ -1,4 +1,5 @@
 import json
+import csv
 
 from dataclasses import asdict
 from pathlib     import Path
@@ -52,3 +53,46 @@ class JsonlRepository:
 
         if not transaction: return 1
         return max(transactions["id"] for transactions in transaction) + 1
+
+    def import_csv(self, file_path: str | Path) -> list[dict]:
+        data_list = []
+
+        with Path(file_path).open("r", encoding='utf-8-sig', newline="") as file:
+            render = csv.DictReader(file)
+
+            for row in render:
+                data_list.append({
+                    "date"     : row["date"],
+                    "type"     : row["type"],
+                    "category" : row["category"],
+                    "amount"   : int(row["amount"]),
+                    "memo"     : row.get("memo"),
+                    "tags": [
+                        tag.strip()
+                        for tag in row.get("tags", "").split(",")
+                        if  tag.strip()
+                    ]
+                })
+        return data_list
+
+    def export_csv(self, file_path: str | Path, data_list: list[dict]) -> None:
+        with Path(file_path).open("w", encoding="utf-8", newline="") as file:
+            writer = csv.DictWriter(
+                file,
+                fieldnames=[
+                    "date"  , "type", "category",
+                    "amount", "memo", "tags"
+                ]
+            )
+
+            writer.writeheader()
+
+            for data in data_list:
+                writer.writerow({
+                    "date"     : data["date"],
+                    "type"     : data["type"],
+                    "category" : data["category"],
+                    "amount"   : data["amount"],
+                    "memo"     : data["memo"],
+                    "tags"     : ",".join(data["tags"])
+                })

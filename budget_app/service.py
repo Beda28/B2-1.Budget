@@ -119,3 +119,27 @@ class TransactionService:
         data_list.sort(key=lambda item: item["date"], reverse=True)
 
         return data_list
+
+    def import_csv(self, file_path: str) -> int:
+        data_list = self.transaction.import_csv(file_path)
+
+        for data in data_list:
+            data["id"] = self.next_id()
+            self.add(data)
+
+        return len(data_list)
+
+    def export_csv(self, file_path: str,         month  : str | None = None,
+                   date_from: str | None = None, date_to: str | None = None
+        ) -> int:
+        data_list = []
+
+        for data in self.transaction.stream():
+            if month     is not None and not data["date"].startswith(month) : continue
+            if date_from is not None and     data["date"] < date_from       : continue
+            if date_to   is not None and     data["date"] > date_to         : continue
+
+            data_list.append(data)
+
+        self.transaction.export_csv(file_path, data_list)
+        return len(data_list)

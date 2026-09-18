@@ -45,5 +45,14 @@ def create_parser() -> argparse.ArgumentParser:
     search.add_argument("--type")
     search.add_argument("--q")
     search.add_argument("--tag")
-    
+
+    import_cmd = subparse.add_parser("import")
+    import_cmd.add_argument("--from", dest="file", required=True)
+
+    export_cmd = subparse.add_parser("export")
+    export_cmd.add_argument("--out" , required=True)
+    export_cmd.add_argument("--month")
+    export_cmd.add_argument("--from", dest="date_from")
+    export_cmd.add_argument("--to"  , dest="date_to")
+
     return parser

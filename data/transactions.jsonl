@@ -1,1 +1,4 @@
 {"id": 1, "type": "expense", "date": "2026-09-17", "amount": 5000, "category": "test", "memo": "hahah", "tags": [""]}
+{"date": "2026-09-17", "type": "expense", "category": "test", "amount": 5000, "memo": "hahah", "tags": [], "id": 2}
+{"date": "2026-09-17", "type": "expense", "category": "test", "amount": 5000, "memo": "hahah", "tags": [], "id": 3}
+{"date": "2026-09-17", "type": "expense", "category": "test", "amount": 5000, "memo": "hahah", "tags": [], "id": 4}
