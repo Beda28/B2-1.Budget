@@ -38,9 +38,7 @@ class JsonlRepository:
 
         if len(data_list) == len(new_list): return False
 
-        with self.file_path.open("w", encoding='utf-8') as file:
-            for data in new_list:
-                file.write(json.dumps(data, ensure_ascii=False) + "\n")
+        self.rewrite(new_list)
         return True
 
     def rewrite(self, data_list: list[dict]) -> None:

@@ -50,13 +50,13 @@ class TransactionService:
         
         self.transaction.save(transaction)
 
-    def list(self, limit: int = 3) -> list[dict]:
+    def list(self, limit: int) -> list[dict]:
         validate_limit(limit)
 
         data = list(self.transaction.stream())
+        data.sort(key=lambda item: (item["date"], item["id"]), reverse=True)
         if limit is not None: data = data[-limit:]
 
-        data.sort(key=lambda item: (item["date"], item["id"]), reverse=True)
         return data
 
     def detail(self, id: int) -> dict | None:

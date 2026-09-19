@@ -7,7 +7,7 @@ def create_parser() -> argparse.ArgumentParser:
     subparse.add_parser("add")
 
     list = subparse.add_parser("list")
-    list.add_argument("--limit", type=int)
+    list.add_argument("--limit", type=int, default=3)
 
     detail = subparse.add_parser("detail")
     detail.add_argument("id", type=int)
@@ -16,7 +16,7 @@ def create_parser() -> argparse.ArgumentParser:
     update.add_argument("id", type=int)
 
     delete = subparse.add_parser("delete")
-    delete.add_argument("id", type=int)
+    delete.add_argument("id", type=int, required=True)
 
     category     = subparse.add_parser("category")
     category_sub = category.add_subparsers(dest="cate", required=True)

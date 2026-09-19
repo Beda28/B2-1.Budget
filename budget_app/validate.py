@@ -82,7 +82,7 @@ def validate_export_condition(
     print(month)
     
     if  month     is None and (\
-        date_from is None and \
+        date_from is None or \
         date_to   is None):
         raise ValueError("month, from + to 중 하나 이상 입력해야 합니다.")
     

@@ -5,8 +5,9 @@ def bridge(args) -> None:
     service = TransactionService()
 
     if args.command == "add":
+        id = service.next_id()
         data = Transaction(
-            id       = int(service.next_id()),
+            id       = int(id),
             type     = input("거래 타입(income/expense): "),
             date     = input("거래 날짜(YYYY-MM-DD): "),
             amount   = int(input("거래 금액: ")),
@@ -16,7 +17,7 @@ def bridge(args) -> None:
         )
 
         service.add(data)
-        print("거래가 추가되었습니다.")
+        print(f"거래가 추가되었습니다. ID: {id}")
 
     elif args.command == "list":
         datas = service.list(args.limit)
@@ -61,8 +62,8 @@ def bridge(args) -> None:
             memo     = input("메모: ")                      or data["memo"]
         )
 
-        tags     = split_tag()
-        if tags != []: update_data.tags = tags
+        tags             = split_tag()
+        update_data.tags = tags if tags else data["tags"]
 
         service.update(args.id, update_data)
         print("거래가 수정되었습니다.")
