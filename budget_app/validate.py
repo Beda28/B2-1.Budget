@@ -79,8 +79,6 @@ def validate_export_condition(
         date_to  : str | None = None
         ) -> tuple[str | None, str | None, str | None]:
 
-    print(month)
-    
     if  month     is None and (\
         date_from is None or \
         date_to   is None):
