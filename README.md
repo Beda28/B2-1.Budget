@@ -50,7 +50,7 @@ python -m budget_app list --limit 5
 python -m budget_app import --from test.py    # csv 파일 X
 python -m budget_app import --from test.csv   # 경로를 찾을 수 없는 파일
 python -m budget_app import --from result.csv # 없는 카테고리
-python -m budget_app import --from data.csv   # 정상 추가
+python -m budget_app import --from result.csv # 정상 추가
 
 # transaction 추가 확인
 python -m budget_app list
@@ -83,7 +83,7 @@ python -m budget_app summary --month 2026-09 --top 5
 # 거래 내역 검색
 python -m budget_app search --category food   # 카테고리 검색
 python -m budget_app search --type expense    # 거래 유형 검색
-python -m budget_app search --q 삼각           # 메모 검색
+python -m budget_app search --q haha          # 메모 검색
 python -m budget_app search --tag morning     # 태그 검색
 python -m budget_app search --from 2026-09-19 # 2026-09-15 부터의 거래내역 검색
 python -m budget_app search --to 2026-09-19   # 2026-09-15 까지의 거래내역 검색
@@ -117,5 +117,5 @@ B2-2. Budget
 # 6. csv 스키마
 ```bash
 # id는 충돌방지를 위해 사용 x
-date, type, category, amount, memo, tags
+date,type,category,amount,memo,tags
 ```

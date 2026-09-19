@@ -78,11 +78,13 @@ def validate_export_condition(
         date_from: str | None = None,
         date_to  : str | None = None
         ) -> tuple[str | None, str | None, str | None]:
+
+    print(month)
     
-    if  month     is not None and \
-        date_from is     None and \
-        date_to   is     None:
-        raise ValueError("month, from, to 중 하나 이상 입력해야 합니다.")
+    if  month     is None and (\
+        date_from is None and \
+        date_to   is None):
+        raise ValueError("month, from + to 중 하나 이상 입력해야 합니다.")
     
     if month is not None: validate_month(month)
     validate_date_range(date_from, date_to)
