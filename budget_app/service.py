@@ -50,7 +50,7 @@ class TransactionService:
         
         self.transaction.save(transaction)
 
-    def list(self, limit: int | None = None) -> list[dict]:
+    def list(self, limit: int = 3) -> list[dict]:
         validate_limit(limit)
 
         data = list(self.transaction.stream())
